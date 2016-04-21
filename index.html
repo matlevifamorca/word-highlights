@@ -1,0 +1,110 @@
+<style type="text/css">
+	.highlight
+	{
+		background-color:red;
+	}
+</style>
+<span class="setOfText" data-value="EDUCATION,CARING,SUPPORTING,SIMPLICITY"></span>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script type="text/javascript">
+	var jq = $.noConflict();
+	text_to_hightlight_i = 0;
+	text_to_set_i = 0;
+	text_to_set_total_i = 0;
+	list_of_text_to_set = "";
+	next_text_speed = 1000;
+	typer_speed = 50;
+	highlight_speed = 20;
+	loop_status = 1;
+	function list_of_text_to_set_initialized()
+	{
+		list_of_text_to_set = jq(".setOfText").data("value");
+		if(typeof list_of_text_to_set  !== "undefined")
+		{
+			if(list_of_text_to_set != "")
+			{
+				text_to_set_i = 0;
+				text_to_set_total_i = list_of_text_to_set.length;
+				list_of_text_to_set.split(",");
+				change_text(text_to_set_i,1);
+			}
+		}
+	}
+
+	function list_of_text_to_set_highligh(process)
+	{
+		if(process == 0)
+		{
+			text_to_hightlight_i = jq(".setOfText span").length;
+			list_of_text_to_set_highligh(1);
+		}
+		else if(process == 1)
+		{
+			if(text_to_hightlight_i==-1)
+			{
+				setTimeout(function(){
+					change_text(text_to_set_i,1);
+				},next_text_speed);
+				
+			}
+			else
+			{
+				jq(".setOfText span:eq(" + text_to_hightlight_i + ")").addClass("highlight");
+				text_to_hightlight_i--;
+				setTimeout(function(){list_of_text_to_set_highligh(1);},highlight_speed);
+			}
+		}
+
+	}
+	function change_text(current_i,action)
+	{
+		jq(".setOfText").removeClass("highlight");
+		if(text_to_set_i == text_to_set_total_i)
+		{
+			if(loop_status == 1)
+			{
+				text_to_set_i = 0;
+			}
+			list_of_text_to_set_highligh(0);
+		}
+		else
+		{
+			if(list_of_text_to_set[current_i] != ",")
+			{
+				if(text_to_set_i != text_to_set_total_i)
+				{
+					new_text = "<span>" + list_of_text_to_set[current_i].toUpperCase() + "</span>";
+					if(action == 1)
+					{
+						jq(".setOfText").html(new_text);
+					}
+					else
+					{
+						jq(".setOfText").append(new_text);
+					}
+					text_to_set_i++;
+				}
+				else
+				{
+					if(loop_status == 1)
+					{
+						text_to_set_i = 0;
+					}
+				}
+				setTimeout(function(){
+					change_text(text_to_set_i,0);
+				},typer_speed);
+			}
+			else
+			{
+				text_to_set_i++;
+				list_of_text_to_set_highligh(0);
+			}
+		}
+
+			
+	}
+		setTimeout(function(){
+			list_of_text_to_set_initialized();
+		},next_text_speed);
+</script>
